@@ -2,7 +2,7 @@ var Service, Characteristic;
 var net = require('net');
 var exec = require('child_process');
 var set = require('./setvalue.js');
-var current_value = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var current_value = [100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100];
 
 var current_state = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
 
@@ -41,9 +41,7 @@ test.prototype.accessories = function(callback){
 
  client.on('close', function() {
 	console.log('Connection closed=',ip);
-    client.connect(port, ip, function() {
-		console.log('Connected to Dummy Server at IP:',ip,'and port:',port);
-	  });
+    client.connect({ port: port, host: ip });
 
  }); 
 
@@ -63,14 +61,24 @@ class TEST_SWITCH{
 	this.port = port;
 	this.id = id;
 	this.name =  "TEST Switch-"+id;
-	this.TEST_SWITCH = new Service.Switch(this.name);
+	this.TEST_SWITCH = new Service.Lightbulb(this.name);
 	}	
 	setsnswt(stt){ 	  
       set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
     }	
 	getsnswt(){  
 	  return current_state[this.id];	
-	}	
+	}
+
+	setbulb(stt){ 	  
+		set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
+	  }
+
+	getbulb(){  
+		return current_value[this.id];	
+	  }
+
+
 	 getServices(){
       var infoService = new Service.AccessoryInformation();
         infoService
@@ -78,7 +86,11 @@ class TEST_SWITCH{
          .setCharacteristic(Characteristic.Model, "Test-Switch")
          .setCharacteristic(Characteristic.SerialNumber, this.id);
       this.TEST_SWITCH
-         .getCharacteristic(Characteristic.On).onGet(this.getsnswt.bind(this)).onSet(this.setsnswt.bind(this)); 
+         .getCharacteristic(Characteristic.On).onGet(this.getsnswt.bind(this)).onSet(this.setsnswt.bind(this));
+		
+	  this.TEST_SWITCH
+         .getCharacteristic(Characteristic.Brightness).onGet(this.getbulb.bind(this)).onSet(this.setbulb.bind(this)); 
+
 	 return [infoService,this.TEST_SWITCH];
     }
 	updatevalue(cs){

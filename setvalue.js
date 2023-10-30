@@ -5,12 +5,12 @@ var client = net.Socket();
 client.connect(port, ip, function() {
 	console.log('Connected from outside');
 	client.write(data);
-	client.destroy();
+	client.end()
 	
 });
 client.on('data', function(data) {
 	console.log('Received: ' + data);
-	client.destroy();
+	client.end()
 });
 client.on('close', function() {
 	console.log('Connection closed');
