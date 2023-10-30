@@ -2,6 +2,7 @@ var Service, Characteristic;
 var net = require('net');
 var exec = require('child_process');
 var set = require('./setvalue.js');
+
 var current_value = [100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100];
 
 var current_state = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
@@ -64,15 +65,20 @@ class TEST_SWITCH{
 	this.TEST_SWITCH = new Service.Lightbulb(this.name);
 	}	
 	setsnswt(stt){ 	  
-		console.log("stt",stt);
+		if(stt){
+			current_state[this.id] = 1;
+		}else{
+			current_state[this.id] = 0;
+	  }
       set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
     }	
 	getsnswt(){  
 	  return current_state[this.id];	
 	}
 
-	setbulb(stt){ 	  
-		set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
+	setbulb(val){ 
+		current_value[this.id] = val;	  
+		set.set_data('{"value":'+Number(val)+',"id":"'+this.id+'"}', this.ip, this.port);
 	  }
 
 	getbulb(){  
