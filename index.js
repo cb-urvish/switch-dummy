@@ -64,7 +64,7 @@ class TEST_SWITCH{
 	this.TEST_SWITCH = new Service.Switch(this.name);
 	}	
 	setsnswt(stt){ 	  
-     // set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
+      set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
     }	
 	getsnswt(){  
 	  return current_state[this.id];	
