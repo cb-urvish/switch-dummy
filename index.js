@@ -3,6 +3,7 @@ var net = require('net');
 var exec = require('child_process');
 var set = require('./setvalue.js');
 var current_value = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
 var current_state = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
 
 module.exports = (homebridge) => {
@@ -22,11 +23,12 @@ test.prototype.accessories = function(callback){
  var results = [];
  let client = new net.Socket();
  var ip = this.ip;
- var gen = this.gen;
  var port = this.port;
+
  client.connect(port, this.ip, function() {
 	console.log('Connected to Dummy Server at IP:',ip,'and port:',port);
   });
+
  client.on('data', function(data) {
 	try {
 	data = JSON.parse(data);
@@ -36,15 +38,18 @@ test.prototype.accessories = function(callback){
 		console.log(err);
 	}
  });
+
  client.on('close', function() {
 	console.log('Connection closed=',ip);
        client.connect({ port: port, host: ip });
 
  }); 
+
 client.on('error', function(err) {
 	console.log('err='+ip);
- }); 
- for(var i=1;i<=this.total_switch;i++){
+ });
+
+ for (var i=1;i<=this.total_switch;i++){
 		 results.push(new TEST_SWITCH(this.ip,this.port,i));
  }
  callback(results)
@@ -55,11 +60,11 @@ class TEST_SWITCH{
 	this.ip = ip;  
 	this.port = port;
 	this.id = id;
-	this.name =  "TEST Switch-"+id
+	this.name =  "TEST Switch-"+String(id);
 	this.TEST_SWITCH = new Service.Switch(this.name);
 	}	
 	setsnswt(stt){ 	  
-      set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
+     // set.set_data('{"value":'+Number(stt)+',"id":"'+this.id+'"}', this.ip, this.port);
     }	
 	getsnswt(){  
 	  return current_state[this.id];	
