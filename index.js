@@ -41,7 +41,7 @@ test.prototype.accessories = function(callback){
 
  client.on('close', function() {
 	console.log('Connection closed=',ip);
-       client.connect({ port: port, host: ip });
+    client.connect({ port: port, host: ip });
 
  }); 
 
@@ -60,7 +60,7 @@ class TEST_SWITCH{
 	this.ip = ip;  
 	this.port = port;
 	this.id = id;
-	this.name =  "TEST Switch-"+String(id);
+	this.name =  "TEST Switch-"+id;
 	this.TEST_SWITCH = new Service.Switch(this.name);
 	}	
 	setsnswt(stt){ 	  
