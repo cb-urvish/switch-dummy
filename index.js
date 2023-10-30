@@ -74,7 +74,7 @@ class TEST_SWITCH{
         infoService
          .setCharacteristic(Characteristic.Manufacturer, "Chipbucket Solutions Pvt. Ltd.")
          .setCharacteristic(Characteristic.Model, "Test-Switch")
-         .setCharacteristic(Characteristic.SerialNumber, id);
+         .setCharacteristic(Characteristic.SerialNumber, this.id);
       this.TEST_SWITCH
          .getCharacteristic(Characteristic.On).onGet(this.getsnswt.bind(this)).onSet(this.setsnswt.bind(this)); 
 	 return [infoService,this.TEST_SWITCH];
