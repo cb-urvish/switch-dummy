@@ -41,7 +41,9 @@ test.prototype.accessories = function(callback){
 
  client.on('close', function() {
 	console.log('Connection closed=',ip);
-    client.connect({ port: port, host: ip });
+    client.connect(port, ip, function() {
+		console.log('Connected to Dummy Server at IP:',ip,'and port:',port);
+	  });
 
  }); 
 
